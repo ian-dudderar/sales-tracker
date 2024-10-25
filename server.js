@@ -1,10 +1,11 @@
 const { createServer } = require("http");
 const { parse } = require("url");
-const next = require("next");
 
+// const port = process.env.PORT || 3000;
+const port = 80;
 const dev = process.env.NODE_ENV !== "production";
+const next = require("next");
 const hostname = "localhost";
-const port = 3000;
 const app = next({ dev, hostname, port });
 
 //WHY WONT ENV VARIABLE WORK HERE?
@@ -14,7 +15,6 @@ const handle = app.getRequestHandler();
 let clients = [];
 
 app.prepare().then(() => {
-  console.log("URL: ", URL);
   createServer(async (req, res) => {
     try {
       const parsedUrl = parse(req.url, true);
@@ -32,11 +32,6 @@ app.prepare().then(() => {
             client.send(data);
           });
         });
-
-        // console.log(JSON.parse(req.body));
-        // clients.forEach((client) => {
-        //   client.send("HELLO FROM IAN");
-        // });
       } else {
         await handle(req, res, parsedUrl);
       }
@@ -51,21 +46,19 @@ app.prepare().then(() => {
       process.exit(1);
     })
     .listen(port, () => {
-      console.log(`> Ready on ${URL}`);
+      console.log(`> Ready on `);
       onServerStart();
     });
 });
 
 const onServerStart = () => {
   const WebSocket = require("ws");
-  const wss = new WebSocket.Server({ port: 8080 });
-  // fetch(`${URL}/api/webhooks`);
+  const wss = new WebSocket.Server({ port: 80 });
+  // fetch(`${process.env.LOCAL_URL}/api/webhooks`);
 
   wss.on("connection", (ws) => {
     console.log("New WebSocket connection");
     clients.push(ws);
-
-    // ws.isAlive = true; dont know if we need this or nottt
 
     ws.on("message", (message) => {
       console.log(`Received: ${message}`);

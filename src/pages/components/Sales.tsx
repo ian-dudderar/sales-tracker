@@ -40,11 +40,13 @@ const AnimatedProgress: React.FC<AnimatedProgressProps> = ({ value }) => {
 interface SalesProps {
   currentAmount: number;
   goalAmount: number;
+  goalReached: boolean;
 }
 
 export default function Sales({
   currentAmount = 23,
   goalAmount = 100,
+  goalReached = false,
 }: SalesProps) {
   const percentage = Math.min(
     Math.round((currentAmount / goalAmount) * 100),
@@ -62,6 +64,13 @@ export default function Sales({
     decimalPlaces: 0,
     startVal: startPercentageVal.current,
   };
+
+  useEffect(() => {
+    if (!goalReached) return;
+    const element = document.getElementById("container");
+    if (!element) return;
+    element.style.borderColor = "#16ade4";
+  }, [goalReached]);
 
   useEffect(() => {
     if (currentAmount === 0) return;
@@ -103,16 +112,6 @@ export default function Sales({
     }
   }
 
-  function onClick() {
-    const element = document.getElementById("container");
-    if (element) {
-      element.classList.add("highlight");
-      setTimeout(() => {
-        element.classList.remove("highlight");
-      }, 2000);
-    }
-  }
-
   return (
     <>
       {/* // Change the width here if u want to i.e. className w-3/4 etc*/}
@@ -139,10 +138,10 @@ export default function Sales({
             className=" h-auto"
           />
         </div>
-        <div className="w-full">
+        <div className="w-full font-bold">
           <div className="justify-between w-full flex p-2 text-primary-pink">
             <div>
-              <span className="text-lg font-medium">Progress</span>
+              <span className="text-lg ">Progress</span>
             </div>
             <div className="text-lg font-bold">
               <span ref={percentageRef}>0</span>
@@ -158,7 +157,6 @@ export default function Sales({
             <span>Goal: $1,000,000</span>
           </div>
         </div>
-        {/* <button onClick={onClick}>Click me</button> */}
       </div>
     </>
   );

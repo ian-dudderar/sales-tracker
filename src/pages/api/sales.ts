@@ -7,8 +7,6 @@ const router = createRouter<NextApiRequest, NextApiResponse>();
 const URL = process.env["LOCAL_URL"];
 
 router.post(async (req: any, res: any) => {
-  console.log("received");
-  console.log(req.body);
   const orderTotal = req.body.total_price;
 
   fetch(`${URL}/api/websocket`, {

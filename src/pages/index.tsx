@@ -9,7 +9,11 @@ export default function Home() {
   const [salesTotal, setSalesTotal] = useState(0);
   const [goalReached, setGoalReached] = useState(false);
 
-  const SALES_GOAL = 100000;
+  // const SALES_GOAL = 1000000;
+  // const SALES_GOAL = parseInt(process.env.NEXT_PUBLIC_SALES_GOAL);
+  const SALES_GOAL = process.env.NEXT_PUBLIC_SALES_GOAL
+    ? parseInt(process.env.NEXT_PUBLIC_SALES_GOAL)
+    : 0;
   const startVal = useRef(0);
   const countupRef = useRef(null);
 
@@ -17,7 +21,8 @@ export default function Home() {
   const options = { decimalPlaces: 2, startVal: startVal.current };
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8080"); // Your WebSocket server URL
+    const ws = new WebSocket("ws://" + process.env.LOCAL_URL + ":80"); // Your WebSocket server URL
+    // const ws = new WebSocket("ws://localhost:8080" + process.env.PORT); // Your WebSocket server URL
     setSocket(ws);
 
     ws.onopen = () => {
@@ -46,7 +51,7 @@ export default function Home() {
 
   useEffect(() => {
     if (salesTotal === 0) return;
-    if (salesTotal >= 100000) {
+    if (salesTotal >= SALES_GOAL) {
       setGoalReached(true);
     }
 
@@ -79,7 +84,11 @@ export default function Home() {
     <>
       <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
         {goalReached && <Confetti />}
-        <Sales currentAmount={salesTotal} goalAmount={SALES_GOAL} />
+        <Sales
+          currentAmount={salesTotal}
+          goalAmount={SALES_GOAL}
+          goalReached={goalReached}
+        />
       </div>
     </>
   );
