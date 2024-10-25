@@ -21,7 +21,8 @@ export default function Home() {
   const options = { decimalPlaces: 2, startVal: startVal.current };
 
   useEffect(() => {
-    const ws = new WebSocket("ws://" + process.env.LOCAL_URL + ":80"); // Your WebSocket server URL
+    var host = location.origin.replace(/^http/, "ws");
+    const ws = new WebSocket(host); // Your WebSocket server URL
     // const ws = new WebSocket("ws://localhost:8080" + process.env.PORT); // Your WebSocket server URL
     setSocket(ws);
 
