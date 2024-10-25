@@ -45,7 +45,7 @@ app.prepare().then(() => {
       console.error(err);
       process.exit(1);
     })
-    .listen(port, () => {
+    .listen(process.env.PORT || port, () => {
       console.log(`> Ready on `);
       onServerStart();
     });
