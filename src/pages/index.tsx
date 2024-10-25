@@ -21,8 +21,15 @@ export default function Home() {
   const options = { decimalPlaces: 2, startVal: startVal.current };
 
   useEffect(() => {
-    var host = location.origin.replace(/^http/, "ws");
-    const ws = new WebSocket(host); // Your WebSocket server URL
+    // var host = location.origin.replace(/^http/, "ws");
+    const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
+    const wsHost = window.location.host; // gets the current host (domain and port)
+    const wsUrl = `${wsProtocol}://${wsHost}`;
+    console.log("URL: ", wsUrl);
+
+    // const ws = new WebSocket(host); // Your WebSocket server URL
+    const ws = new WebSocket(wsUrl); // Your WebSocket server URL
+    // const ws = new WebSocket("ws://localhost:80"); // Your WebSocket server URL
     // const ws = new WebSocket("ws://localhost:8080" + process.env.PORT); // Your WebSocket server URL
     setSocket(ws);
 
@@ -31,6 +38,7 @@ export default function Home() {
     };
 
     ws.onmessage = (event) => {
+      console.log("Message received: " + event.data);
       setSalesTotal((prev) => prev + parseFloat(event.data));
     };
 

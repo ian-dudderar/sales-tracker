@@ -8,7 +8,6 @@ const next = require("next");
 const hostname = "localhost";
 const app = next({ dev, hostname, port });
 
-//WHY WONT ENV VARIABLE WORK HERE?
 const URL = "http://localhost:3000";
 const handle = app.getRequestHandler();
 
@@ -32,6 +31,8 @@ app.prepare().then(() => {
           console.log("DATA IN WEBSOCKET");
           console.log(data); // Body data
           clients.forEach((client) => {
+            console.log("SENDING DATA TO CLIENT");
+            console.log(client);
             client.send(data);
           });
         });
@@ -40,6 +41,7 @@ app.prepare().then(() => {
       }
     } catch (err) {
       console.error("Error occurred handling", req.url, err);
+      z;
       res.statusCode = 500;
       res.end("internal server error");
     }
