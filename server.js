@@ -21,12 +21,16 @@ app.prepare().then(() => {
       const { pathname, query } = parsedUrl;
 
       if (pathname === "/api/websocket") {
+        console.log("PATH HIT");
         let body = "";
         req.on("data", (chunk) => {
           body += chunk.toString(); // convert Buffer to string
         });
+        console.log("BODY");
+        console.log(JSON.parse(body));
         req.on("end", () => {
           let data = JSON.parse(body);
+          console.log("DATA IN WEBSOCKET");
           console.log(data); // Body data
           clients.forEach((client) => {
             client.send(data);

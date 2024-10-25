@@ -8,6 +8,7 @@ const URL = process.env["LOCAL_URL"];
 
 router.post(async (req: any, res: any) => {
   const orderTotal = req.body.total_price;
+  console.log("received order total: ", orderTotal);
 
   fetch(`${URL}/api/websocket`, {
     method: "POST",
