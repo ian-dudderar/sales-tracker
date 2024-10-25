@@ -17,6 +17,7 @@ router.post(async (req: any, res: any) => {
       body: JSON.stringify(orderTotal),
     }
   );
+
   res.status(200).json({ message: "success" });
 });
 

@@ -26,8 +26,7 @@ app.prepare().then(() => {
         req.on("data", (chunk) => {
           body += chunk.toString(); // convert Buffer to string
         });
-        console.log("BODY");
-        console.log(JSON.parse(body));
+
         req.on("end", () => {
           let data = JSON.parse(body);
           console.log("DATA IN WEBSOCKET");
