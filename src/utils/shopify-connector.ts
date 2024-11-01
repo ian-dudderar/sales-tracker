@@ -81,6 +81,7 @@ export default class ShopifyConnector {
     const session = this.getSession();
     const graphQLClient = new shopify.clients.Graphql({ session });
 
+    // const CALLBACK_URL = process.env["URL"];
     const CALLBACK_URL = process.env["CALLBACK_URL"];
 
     // const webhookTopics = ["ORDERS_PAID", "REFUNDS_CREATE", "CARTS_UPDATE"];

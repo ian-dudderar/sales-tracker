@@ -54,36 +54,6 @@ export default function Home() {
     };
   }, []);
 
-  // useEffect(() => {
-  //   const ws = new WebSocket("ws://" + process.env.LOCAL_URL); // Your WebSocket server URL
-  //   // const ws = new WebSocket("ws://localhost:8080" + process.env.PORT); // Your WebSocket server URL
-  //   setSocket(ws);
-
-  //   ws.onopen = () => {
-  //     console.log("WebSocket connection established");
-  //   };
-
-  //   ws.onmessage = (event) => {
-  //     console.log("message");
-  //     setSalesTotal((prev) => prev + parseFloat(event.data));
-  //   };
-
-  //   ws.onclose = () => {
-  //     console.log("WebSocket connection closed");
-  //   };
-
-  //   fetch("../api/sales")
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setSalesTotal(data.total);
-  //     });
-
-  //   // Cleanup the WebSocket connection on component unmount
-  //   return () => {
-  //     ws.close();
-  //   };
-  // }, []);
-
   useEffect(() => {
     if (salesTotal === 0) return;
     if (salesTotal >= SALES_GOAL) {

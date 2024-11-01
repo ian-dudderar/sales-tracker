@@ -8,19 +8,8 @@ const URL = process.env["LOCAL_URL"];
 
 router.post(async (req: any, res: any) => {
   const orderTotal = req.body.total_price;
-  console.log("received order total: ", orderTotal);
-
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || req.headers.host;
-  console.log(baseUrl);
-  const fetchUrl = `http://${baseUrl}/api/websocket`;
-
-  // fetch(
-  //   `https://maxwood-sales-tracker-9adad0088d36.herokuapp.com/api/websocket`,
-  //   {
-  //     method: "POST",
-  //     body: JSON.stringify(orderTotal),
-  //   }
-  // );
+  const baseUrl = process.env.URL || `http://${req.headers.host}`;
+  const fetchUrl = `${baseUrl}/api/websocket`;
 
   fetch(`${fetchUrl}`, {
     method: "POST",
@@ -39,7 +28,6 @@ router.get(async (req: any, res: any) => {
   }
   const total = Math.round(orderData.reduce((a, b) => a + b, 0) * 100) / 100;
 
-  console.log(total);
   res.status(200).json({ total });
 });
 

@@ -112,6 +112,10 @@ export default function Sales({
     }
   }
 
+  function numberWithCommas(x: any) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
   return (
     <>
       {/* // Change the width here if u want to i.e. className w-3/4 etc*/}
@@ -141,7 +145,7 @@ export default function Sales({
         <div className="w-full font-bold">
           <div className="justify-between w-full flex p-2 text-primary-pink">
             <div>
-              <span className="text-lg ">Progress</span>
+              <span className="text-lg ">Progress:</span>
             </div>
             <div className="text-lg font-bold">
               <span ref={percentageRef}>0</span>
@@ -154,7 +158,7 @@ export default function Sales({
               <span>Current: $</span>
               <span ref={countupRef}>{currentAmount}</span>
             </div>
-            <span>Goal: $1,000,000</span>
+            <span>Goal: ${numberWithCommas(goalAmount)}</span>
           </div>
         </div>
       </div>
