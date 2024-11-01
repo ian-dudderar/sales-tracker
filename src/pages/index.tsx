@@ -2,10 +2,12 @@ import { CountUp } from "countup.js";
 import { useEffect, useState, useRef } from "react";
 import Sales from "./components/Sales";
 import Confetti from "./components/Confetti";
+import { io } from "socket.io-client";
 import Image from "next/image";
 
+const socket = io();
+
 export default function Home() {
-  const [socket, setSocket] = useState<WebSocket | null>(null);
   const [salesTotal, setSalesTotal] = useState(0);
   const [goalReached, setGoalReached] = useState(false);
 
@@ -21,21 +23,15 @@ export default function Home() {
   const options = { decimalPlaces: 2, startVal: startVal.current };
 
   useEffect(() => {
-    const ws = new WebSocket("ws://" + process.env.LOCAL_URL + ":80"); // Your WebSocket server URL
-    // const ws = new WebSocket("ws://localhost:8080" + process.env.PORT); // Your WebSocket server URL
-    setSocket(ws);
+    function onConnect() {
+      console.log("connected");
 
-    ws.onopen = () => {
-      console.log("WebSocket connection established");
-    };
+      socket.emit("hello", "world");
+    }
 
-    ws.onmessage = (event) => {
-      setSalesTotal((prev) => prev + parseFloat(event.data));
-    };
-
-    ws.onclose = () => {
-      console.log("WebSocket connection closed");
-    };
+    function onDisconnect() {
+      console.log("disconnected");
+    }
 
     fetch("../api/sales")
       .then((response) => response.json())
@@ -43,11 +39,50 @@ export default function Home() {
         setSalesTotal(data.total);
       });
 
-    // Cleanup the WebSocket connection on component unmount
+    socket.on("connect", onConnect);
+
+    socket.on("update", (arg) => {
+      console.log("updatE: ", arg);
+      setSalesTotal((prev) => prev + parseFloat(arg));
+    });
+
+    socket.on("disconnect", onDisconnect);
+
     return () => {
-      ws.close();
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
     };
   }, []);
+
+  // useEffect(() => {
+  //   const ws = new WebSocket("ws://" + process.env.LOCAL_URL); // Your WebSocket server URL
+  //   // const ws = new WebSocket("ws://localhost:8080" + process.env.PORT); // Your WebSocket server URL
+  //   setSocket(ws);
+
+  //   ws.onopen = () => {
+  //     console.log("WebSocket connection established");
+  //   };
+
+  //   ws.onmessage = (event) => {
+  //     console.log("message");
+  //     setSalesTotal((prev) => prev + parseFloat(event.data));
+  //   };
+
+  //   ws.onclose = () => {
+  //     console.log("WebSocket connection closed");
+  //   };
+
+  //   fetch("../api/sales")
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setSalesTotal(data.total);
+  //     });
+
+  //   // Cleanup the WebSocket connection on component unmount
+  //   return () => {
+  //     ws.close();
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (salesTotal === 0) return;

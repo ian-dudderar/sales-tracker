@@ -10,6 +10,10 @@ router.post(async (req: any, res: any) => {
   const orderTotal = req.body.total_price;
   console.log("received order total: ", orderTotal);
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || req.headers.host;
+  console.log(baseUrl);
+  const fetchUrl = `http://${baseUrl}/api/websocket`;
+
   // fetch(
   //   `https://maxwood-sales-tracker-9adad0088d36.herokuapp.com/api/websocket`,
   //   {
@@ -18,7 +22,7 @@ router.post(async (req: any, res: any) => {
   //   }
   // );
 
-  fetch(`http://localhost:8080/api/websocket`, {
+  fetch(`${fetchUrl}`, {
     method: "POST",
     body: JSON.stringify(orderTotal),
   });
