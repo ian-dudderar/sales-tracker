@@ -1,5 +1,9 @@
 import "@shopify/shopify-api/adapters/node";
-import { ApiVersion, shopifyApi } from "@shopify/shopify-api";
+import {
+  ApiVersion,
+  shopifyApi,
+  RestRequestReturn,
+} from "@shopify/shopify-api";
 import { restResources } from "@shopify/shopify-api/rest/admin/2023-04";
 
 export default class ShopifyConnector {
@@ -59,21 +63,45 @@ export default class ShopifyConnector {
   async getShopifyOrders() {
     const shopify = this.getClient();
     const session = this.getSession();
+    // Lets remove orders that are 'cancelled' based on status
 
-    const orders = await shopify.rest.Order.all({
-      session: session,
+    let pageInfo: RestRequestReturn["pageInfo"] | undefined;
+    let pageData: any[] = [];
+
+    let query = {
+      limit: 250,
       status: "any",
-      created_at_min: "2024-10-14T04:00:00Z",
-    });
+      created_at_min: "2024-11-26T05:00:00Z",
+    };
 
-    let orderData = [];
+    do {
+      try {
+        let data = {};
+        if (pageInfo && pageInfo.nextPage) {
+          data = pageInfo.nextPage.query;
+        } else {
+          data = query;
+        }
 
-    for (const order of orders.data) {
-      orderData.push(parseFloat(order.total_price));
-    }
+        // Get orders
+        const response = await shopify.rest.Order.all({
+          session: session,
+          ...data,
+        });
+        const page = response.data;
+        // Add products to pageData
+        pageData = [...pageData, ...page];
 
-    const total = Math.round(orderData.reduce((a, b) => a + b, 0) * 100) / 100;
-    return orders.data;
+        // Set pageInfo to the next page
+        pageInfo = response.pageInfo;
+      } catch (error) {
+        console.error(error);
+      }
+    } while (pageInfo?.nextPage);
+    let x = pageData.length;
+    // console.log(pageData[x - 1]);
+
+    return pageData;
   }
 
   async setWebhooks() {
@@ -82,6 +110,7 @@ export default class ShopifyConnector {
     const graphQLClient = new shopify.clients.Graphql({ session });
 
     const CALLBACK_URL = process.env["URL"];
+    // const CALLBACK_URL = "https://e7a9-98-124-79-64.ngrok-free.app";
     // const CALLBACK_URL = process.env["CALLBACK_URL"];
 
     const webhookTopics = ["ORDERS_PAID"];

@@ -11,8 +11,6 @@ export default function Home() {
   const [salesTotal, setSalesTotal] = useState(0);
   const [goalReached, setGoalReached] = useState(false);
 
-  // const SALES_GOAL = 1000000;
-  // const SALES_GOAL = parseInt(process.env.NEXT_PUBLIC_SALES_GOAL);
   const SALES_GOAL = process.env.NEXT_PUBLIC_SALES_GOAL
     ? parseInt(process.env.NEXT_PUBLIC_SALES_GOAL)
     : 0;
@@ -25,8 +23,6 @@ export default function Home() {
   useEffect(() => {
     function onConnect() {
       console.log("connected");
-
-      socket.emit("hello", "world");
     }
 
     function onDisconnect() {
@@ -42,8 +38,7 @@ export default function Home() {
     socket.on("connect", onConnect);
 
     socket.on("update", (arg) => {
-      console.log("updatE: ", arg);
-      setSalesTotal((prev) => prev + parseFloat(arg));
+      setSalesTotal(() => parseFloat(arg));
     });
 
     socket.on("disconnect", onDisconnect);
