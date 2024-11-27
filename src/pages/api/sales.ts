@@ -10,7 +10,6 @@ async function getShopifySales() {
   const shopify = ShopifyConnector.getInstance();
   const orders = await shopify.getShopifyOrders();
   let orderData = [];
-  // console.log(orders[1]);
   for (const order of orders) {
     // if (order.)
     orderData.push(parseFloat(order.total_price));
