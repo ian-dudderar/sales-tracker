@@ -5,7 +5,6 @@ import {
   RestRequestReturn,
 } from "@shopify/shopify-api";
 import { restResources } from "@shopify/shopify-api/rest/admin/2023-04";
-import fs from "fs";
 
 export default class ShopifyConnector {
   public static instance: ShopifyConnector;
@@ -72,7 +71,7 @@ export default class ShopifyConnector {
     let query = {
       limit: 250,
       status: "any",
-      created_at_min: "2024-11-27T05:00:00Z",
+      created_at_min: "2024-11-29T05:00:00Z",
     };
 
     do {
@@ -99,10 +98,6 @@ export default class ShopifyConnector {
         console.error(error);
       }
     } while (pageInfo?.nextPage);
-    let x = pageData.length;
-    // console.log(pageData[x - 1]);
-
-    fs.writeFileSync(`./orders-ml.json`, JSON.stringify(pageData));
 
     return pageData;
   }
