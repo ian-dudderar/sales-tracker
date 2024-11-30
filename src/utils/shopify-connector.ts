@@ -71,7 +71,7 @@ export default class ShopifyConnector {
     let query = {
       limit: 250,
       status: "any",
-      created_at_min: "2024-11-29T05:00:00Z",
+      created_at_min: "2024-11-01T05:00:00Z",
     };
 
     do {

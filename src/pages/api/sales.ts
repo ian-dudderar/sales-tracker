@@ -16,7 +16,6 @@ async function getShopifySales() {
   }
   const total = Math.round(orderData.reduce((a, b) => a + b, 0) * 100) / 100;
 
-  // const total = 1000;
   return total;
 }
 
