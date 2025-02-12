@@ -11,7 +11,6 @@ async function getShopifySales() {
   const orders = await shopify.getShopifyOrders();
   let orderData = [];
   for (const order of orders) {
-    // if (order.)
     orderData.push(parseFloat(order.total_price));
   }
   const total = Math.round(orderData.reduce((a, b) => a + b, 0) * 100) / 100;

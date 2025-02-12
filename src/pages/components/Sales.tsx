@@ -118,7 +118,6 @@ export default function Sales({
 
   return (
     <>
-      {/* // Change the width here if u want to i.e. className w-3/4 etc*/}
       <div className="">
         <style jsx global>{`
           @keyframes candy-cane {
